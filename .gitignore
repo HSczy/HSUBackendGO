@@ -1,8 +1,10 @@
 .history/
 .vscode/
+.idea/
+
 logs/
+
 __debug_bin
 database.sqlite
 main
 main.exe
-logs/

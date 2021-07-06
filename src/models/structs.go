@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"time"
@@ -18,19 +18,19 @@ type Record struct {
 	Status        string
 }
 
-type postStruct struct {
-	Classname    string
-	Teacher_name string
-	Project_name string
-	Class_time   string
-	Status       string
-	Stu_num      int
-	Student_name int
-	Use_time     string
+type PostStruct struct {
+	Classname   string
+	TeacherName string
+	ProjectName string
+	ClassTime   string
+	Status      string
+	StuNum      int
+	StudentName int
+	UseTime     string
 }
 
-type cellValue struct {
-	sheet string
-	cell  string
-	value string
+type CellValue struct {
+	Sheet string
+	Cell  string
+	Value string
 }
