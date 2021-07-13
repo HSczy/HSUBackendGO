@@ -1,14 +1,15 @@
 package main
 
 import (
+	"backend/src/middleware"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 
-	handle "backend/src/handles"
-	structs "backend/src/models"
-	util "backend/src/utils"
+	"backend/src/controllers"
+	"backend/src/models"
+	"backend/src/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,12 +18,12 @@ func init() {
 	// 第一次创建数据库
 	dir, _ := os.Getwd()
 	databaseFile := filepath.Join(dir, "database.sqlite")
-	if ok := util.ExistPath(databaseFile); !ok {
-		db := util.GetConn()
-		_ = db.AutoMigrate(&structs.Record{})
+	if ok := utils.ExistPath(databaseFile); !ok {
+		db := utils.GetConn()
+		_ = db.AutoMigrate(&models.Record{})
 	}
 	LogPath := filepath.Join(dir, "logs")
-	if ok := util.ExistPath(LogPath); !ok {
+	if ok := utils.ExistPath(LogPath); !ok {
 		_ = os.Mkdir(LogPath, 0777)
 	}
 }
@@ -44,8 +45,8 @@ func main() {
 	gin.DefaultErrorWriter = io.MultiWriter(errlogfile)
 
 	r := gin.Default()
-
-	r.POST("/data", handle.InsertData)
-	r.GET("/download", handle.GetDataFromDate)
+	r.Use(middleware.Cors())
+	r.POST("/data", controller.InsertData)
+	r.GET("/download", controller.GetDataFromDate)
 	_ = r.Run(":8090")
 }

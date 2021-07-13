@@ -1,4 +1,4 @@
-package handles
+package controller
 
 import (
 	"fmt"
@@ -15,9 +15,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const SerectCode = "DKEIR5BYLXTECP7BLI2C4WIUPKGFOAGE"
+const SecretCode = "DKEIR5BYLXTECP7BLI2C4WIUPKGFOAGE"
 
-// 插入数据库
+// InsertData 插入数据库
 func InsertData(c *gin.Context) {
 	// stc := make(map[string]interface{})
 	// c.BindJSON(&stc)
@@ -62,15 +62,15 @@ func InsertData(c *gin.Context) {
 	}
 }
 
-// 读取相关数据
+// GetDataFromDate 读取相关数据
 func GetDataFromDate(c *gin.Context) {
 	timeFormat := "2006-01-02"
 	timeUnix := int(time.Now().Unix())
 	startDate := c.DefaultQuery("start_time", "2000-01-01")
 	endDate := c.DefaultQuery("end_time", time.Now().Format(timeFormat))
-	screct := c.DefaultQuery("screct", "")
-	totp := gotp.NewDefaultTOTP(SerectCode)
-	ok := totp.Verify(screct, timeUnix)
+	secret := c.DefaultQuery("secret", "")
+	totp := gotp.NewDefaultTOTP(SecretCode)
+	ok := totp.Verify(secret, timeUnix)
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "验证码错误"})
 		return
@@ -171,7 +171,10 @@ func GetDataFromDate(c *gin.Context) {
 		}
 		c.Header("Content-Disposition", "attachment; filename=结果文件.xlsx")
 		c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.Sheet")
-		f.Write(c.Writer)
+		err := f.Write(c.Writer)
+		if err != nil {
+			return 
+		}
 	} else if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": result.Error.Error()})
 
