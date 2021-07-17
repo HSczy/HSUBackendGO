@@ -41,7 +41,7 @@ func main() {
 		log.Fatalln("Failed to create request log file:", err)
 	}
 
-	gin.DefaultWriter = io.MultiWriter(logfile)
+	gin.DefaultWriter = io.MultiWriter(logfile,os.Stdout)
 	gin.DefaultErrorWriter = io.MultiWriter(errlogfile)
 
 	r := gin.Default()

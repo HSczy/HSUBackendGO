@@ -19,14 +19,14 @@ type Record struct {
 }
 
 type PostStruct struct {
-	Classname   string
-	TeacherName string
-	ProjectName string
-	ClassTime   string
-	Status      string
-	StuNum      int
-	StudentName int
-	UseTime     string
+	Classname   string `json:"classname"`
+	TeacherName string `json:"teacher_name"`
+	ProjectName string `json:"project_name"`
+	ClassTime   string `json:"class_time"`
+	Status      string `json:"status"`
+	StuNum      int    `json:"stu_num" binding:"numeric"`
+	StudentNum  int    `json:"student_num" binding:"numeric"`
+	UseTime     string `json:"use_time"`
 }
 
 type CellValue struct {

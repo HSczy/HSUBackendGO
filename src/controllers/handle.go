@@ -33,7 +33,7 @@ func InsertData(c *gin.Context) {
 	classTime := json.ClassTime
 	status := json.Status
 	studentNumber := json.StuNum
-	studentNum := json.StudentName
+	studentNum := json.StudentNum
 	useTime := json.UseTime
 
 	if className == "" || teacherName == "" || useTime == "" || classTime == "" {
