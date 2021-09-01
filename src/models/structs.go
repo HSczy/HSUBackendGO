@@ -16,6 +16,7 @@ type Record struct {
 	UseDate       time.Time
 	ClassTime     string
 	Status        string
+	LabName       string
 }
 
 type PostStruct struct {
@@ -27,6 +28,7 @@ type PostStruct struct {
 	StuNum      int    `json:"stu_num" binding:"numeric"`
 	StudentNum  int    `json:"student_num" binding:"numeric"`
 	UseTime     string `json:"use_time"`
+	LabName     string `json:"lab_name"`
 }
 
 type CellValue struct {

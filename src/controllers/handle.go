@@ -69,6 +69,7 @@ func GetDataFromDate(c *gin.Context) {
 	startDate := c.DefaultQuery("start_time", "2000-01-01")
 	endDate := c.DefaultQuery("end_time", time.Now().Format(timeFormat))
 	secret := c.DefaultQuery("secret", "")
+	labName := c.DefaultQuery("lab_name", "")
 	totp := gotp.NewDefaultTOTP(SecretCode)
 	ok := totp.Verify(secret, timeUnix)
 	if !ok {
@@ -83,7 +84,13 @@ func GetDataFromDate(c *gin.Context) {
 	}
 	db := util.GetConn()
 	var records []structs.Record
-	result := db.Where("use_date BETWEEN ? AND ?", startDate, endDate).Find(&records)
+	endDate2 := endDate1.AddDate(0, 0, 1)
+	startDate2 := startDate1.AddDate(0, 0, -1)
+	query := db.Where("use_date BETWEEN ? AND ?", startDate2.Format(timeFormat), endDate2.Format(timeFormat))
+	if labName != "" {
+		query = query.Where("lab_name=?", labName)
+	}
+	result := query.Find(records)
 	if result.RowsAffected != 0 {
 		f := excelize.NewFile()
 		index := f.NewSheet("数据统计")
@@ -121,6 +128,10 @@ func GetDataFromDate(c *gin.Context) {
 			Sheet: "数据统计",
 			Cell:  "H1",
 			Value: "设备状态",
+		}, &structs.CellValue{
+			Sheet: "数据统计",
+			Cell:  "I1",
+			Value: "实验室名字",
 		})
 
 		rowNum := 1
@@ -157,6 +168,8 @@ func GetDataFromDate(c *gin.Context) {
 					v.Value = strconv.Itoa(record.StudentNum)
 				case 7:
 					v.Value = record.Status
+				case 8:
+					v.Value = record.LabName
 				}
 			}
 			for _, data := range cellValues {
@@ -173,7 +186,7 @@ func GetDataFromDate(c *gin.Context) {
 		c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.Sheet")
 		err := f.Write(c.Writer)
 		if err != nil {
-			return 
+			return
 		}
 	} else if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": result.Error.Error()})

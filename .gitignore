@@ -2,7 +2,7 @@
 .vscode/
 .idea/
 
-logs/
+Logs/
 
 __debug_bin
 database.sqlite

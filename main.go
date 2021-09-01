@@ -22,14 +22,14 @@ func init() {
 		db := utils.GetConn()
 		_ = db.AutoMigrate(&models.Record{})
 	}
-	LogPath := filepath.Join(dir, "logs")
+	LogPath := filepath.Join(dir, "Logs")
 	if ok := utils.ExistPath(LogPath); !ok {
 		_ = os.Mkdir(LogPath, 0777)
 	}
 }
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 
 	logfile, err := os.OpenFile("./Logs/runtime.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -41,7 +41,7 @@ func main() {
 		log.Fatalln("Failed to create request log file:", err)
 	}
 
-	gin.DefaultWriter = io.MultiWriter(logfile,os.Stdout)
+	gin.DefaultWriter = io.MultiWriter(logfile, os.Stdout)
 	gin.DefaultErrorWriter = io.MultiWriter(errlogfile)
 
 	r := gin.Default()
